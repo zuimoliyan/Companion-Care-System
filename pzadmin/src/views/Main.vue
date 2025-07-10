@@ -1,5 +1,4 @@
 <template>
-    测试
     <div>
         Layout
     </div>

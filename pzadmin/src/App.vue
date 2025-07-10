@@ -1,6 +1,4 @@
 <script setup>
-  console.log("测试");
-  
 </script>
 
 <template>

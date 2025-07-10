@@ -1,6 +1,6 @@
 <template>
     <div>
-        Layout
+        Login
     </div>
 </template>
 
