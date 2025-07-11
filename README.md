@@ -68,9 +68,9 @@ export default defineConfig({
 
 ## 页面的Layout布局
 
-- 找到Element plus中的 Container 布局容器，找到我们需要的布局样式，复制代码粘贴到Main.vue中
+- 找到Element plus中的 Container布局容器，找到我们需要的布局样式，复制代码粘贴到Main.vue中
 <https://element-plus.org/zh-CN/component/container.html>
 - 封装的思想，我们把每个布局分别用一个独立的文件存储，存放在`src/components`下
   - aside布局：
-使用对应的 Menu 菜单 做导航栏
+使用对应的 Menu 菜单做导航栏
 <https://element-plus.org/zh-CN/component/menu.html>
