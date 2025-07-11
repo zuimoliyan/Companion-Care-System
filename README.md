@@ -65,5 +65,3 @@ export default defineConfig({
   ],
 })
 ```
-=======
->>>>>>> 922adabfafdb30239bfa304fe6d05b3067b849a5
