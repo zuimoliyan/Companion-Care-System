@@ -20,6 +20,7 @@ vue-router
 引入 vue-router 创建路由实例
 挂载 router 到 vue 实例上
 对应页面使用 `<RouterView/>` 配置路由显示
+<<<<<<< HEAD
 
 ## UI框架
 
@@ -64,3 +65,5 @@ export default defineConfig({
   ],
 })
 ```
+=======
+>>>>>>> 922adabfafdb30239bfa304fe6d05b3067b849a5
