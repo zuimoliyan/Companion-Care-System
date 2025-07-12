@@ -10,7 +10,7 @@
       >
       <p class="logo">DIDI陪诊</p>
 
-    <treeMenu/>
+    <treeMenu :index="1" :menuData = "menuData" />
 
         
       </el-menu>
@@ -19,17 +19,21 @@
 <script setup>
 import treeMenu from "./treeMenu.vue";
 import { useRouter } from "vue-router";
+import { reactive } from "vue";
 
 const router = useRouter()
 console.log(router,'router');
 
+//创建响应式的数据
+const menuData = reactive(router.options.routes[0].children)
 
 const handleOpen = ()=>{}
 const handleClose = ()=>{}
 </script>
 
 <style lang ="less" scoped>
-.aside-container{ //设置左侧的菜单铺满整个容器，但是这里要注意：
+.aside-container{ 
+                  //设置左侧的菜单铺满整个容器，但是这里要注意：
                   // aside-container上面有其他父容器，所以这里只是让它铺满了父容器，
                   // 我们还需要去找到它的父容器（Main.vue）并设置相同样式
   height: 100%;

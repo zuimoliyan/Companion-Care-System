@@ -25,6 +25,7 @@ import Aside from "../components/aside.vue";
   height: 100%;
     .el-container { 
     height: 100%;
+    
   }
 }
 
