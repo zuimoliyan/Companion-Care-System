@@ -18,6 +18,11 @@
 
 <script setup>
 import treeMenu from "./treeMenu.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter()
+console.log(router,'router');
+
 
 const handleOpen = ()=>{}
 const handleClose = ()=>{}
