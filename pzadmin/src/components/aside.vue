@@ -9,7 +9,7 @@
         @open="handleOpen"
         @close="handleClose"
       >
-      <p class="logo">DIDI陪诊</p>
+      <p class="logo" @click="goToRoot">DIDI陪诊</p>
 
     <treeMenu :index="1" :menuData = "menuData" />
 
@@ -18,6 +18,7 @@
 </template>
 
 <script setup>
+
 import treeMenu from "./treeMenu.vue";
 import { useRouter } from "vue-router";
 import { reactive } from "vue";
@@ -30,6 +31,10 @@ const menuData = reactive(router.options.routes[0].children)
 
 const handleOpen = ()=>{}
 const handleClose = ()=>{}
+
+const goToRoot = () => {
+  window.location.href = '/'; // 跳转到根目录
+};
 </script>
 
 <style lang ="less" scoped>
