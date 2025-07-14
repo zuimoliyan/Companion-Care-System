@@ -95,3 +95,21 @@ export default defineConfig({
 
 **第三点：`<el-sub-menu>` 本身的点击行为限制**
 直接点击 `<el-sub-menu>` 组件本身时，它并不会触发继承自父级的事件（比如跳转），而是会执行 Element UI 内置的默认行为，即展开或收起其包含的子菜单。这是因为 `<el-sub-menu>` 的设计初衷就是作为子菜单的容器，其点击交互优先处理菜单的展开/收起逻辑。即使该 `<el-sub-menu>` 在渲染过程中可能接收到父级传递的事件，Element UI 的内部实现会优先处理自身的展开/收起逻辑，并通常会阻止事件继续冒泡，从而使得继承的点击事件无法被触发。
+
+## 为项目导入element-plus的图标
+
+1.下载
+
+`cnpm install @element-plus/icons-vue`
+
+2.注册所有图标
+
+```js
+//main.js
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
+const app = createApp(App)
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
+```

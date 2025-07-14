@@ -1,5 +1,7 @@
 <template>
-
+<div>
+    group：测试
+</div>
 </template>
 
 <script setup>
