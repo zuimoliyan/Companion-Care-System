@@ -1,9 +1,9 @@
 <template>
     <div class="header-container">
         <div class="header-left">
-            <el-icon class="icon" size="20px">
-                <Fold />
-            </el-icon>
+            <el-icon class="icon" size="20px" @click="store.commit('collapseMenu'), console.log('点击事件')">
+        <Fold />
+      </el-icon>
         </div>
 
         <div class="header-right">
@@ -29,6 +29,10 @@
 </template>
 
 <script setup>
+import { useStore } from "vuex";
+
+//拿到store实例
+const store = useStore()
 </script>
 
 <style lang="less" scoped>

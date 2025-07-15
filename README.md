@@ -14,6 +14,9 @@ vite
 vue-router
 <https://router.vuejs.org/zh/>
 
+vuex
+<https://vuex.vuejs.org/zh/>
+
 ## 路由创建
 
 创建路由和对应界面

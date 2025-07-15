@@ -76,6 +76,5 @@ const handleClick = (item,active) =>{
     router.push(item.meta.path)
 }
 
-console.log(props);
 
 </script>
