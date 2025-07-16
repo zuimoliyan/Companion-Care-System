@@ -14,7 +14,7 @@
                         {{ item.name }}
                     </router-link>
 
-                    <el-icon size="12px" class="close">
+                    <el-icon size="12px" class="close" @click="closeTab(item,index)">
                         <Close />
                     </el-icon>
 
@@ -51,14 +51,52 @@ import { computed } from "vue";
 
 import { useStore } from "vuex";
 
-import { useRoute } from "vue-router";
+import { useRoute , useRouter} from "vue-router";
 //当前路由对象
 const route = useRoute()
-
+//用于实现点击关闭tag功能
+const router = useRouter()
 //拿到store实例
 const store = useStore()
 
 const selectMenu = computed(() => store.state.menu.selectMenu)
+
+// 点击关闭tag
+// 这里的思路：
+// 1.tag只有一个的情况：直接跳转到根目录
+// 2.页面不止一个且删除 非 焦点页
+//    直接调用 state.selectMenu.splice(index,1)
+// 3.页面不止一个且删除 焦点页
+//   3.1如果是最后一位为焦点：
+//    调用 state.selectMenu.splice(index,1)后
+//    跳转到selectMenuData-1项
+//   3.2如果是不是最后一位为焦点：
+//   直接调用 state.selectMenu.splice(index,1)
+const closeTab = (item,index)=>{
+    store.commit('closeMenu',item)
+    // 删除的是非当前页tag
+    if (route.path!==item.path) {
+        return
+    }
+
+    const selectMenuData = selectMenu.value
+    //如果删除的是最后一项
+    if (index===selectMenuData.length) {
+        // 如果tag只有一位
+        if (!selectMenuData.length) {
+            router.push('/')
+        }else{
+            router.push({
+                path:selectMenuData[index-1].path
+            })
+        }
+    }else{
+        //如果删除的是中间位tag
+        router.push({
+            path:selectMenuData[index].path
+        })
+    }
+}
 </script>
 
 <style lang="less" scoped>
