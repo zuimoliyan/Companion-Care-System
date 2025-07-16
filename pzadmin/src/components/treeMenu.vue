@@ -57,6 +57,7 @@
 <script setup>
 
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 //defineProps 是一个编译时特性,语法糖
 //如果不在 <script setup> 中使用，Vue 无法在编译时正确解析它
@@ -67,10 +68,16 @@ const router = useRouter()
 //点击菜单跳转
 const props = defineProps(['menuData', 'index'])
 
+const store = useStore()
+
 //这里有一个问题：
 // 为什么这里明明没有在二级菜单上定义点击事件，却还是能跳转？
 //答：即使二级菜单没有直接绑定点击事件，点击事件也会冒泡到一级菜单 （事件冒泡机制（Event Bubbling））
 const handleClick = (item,active) =>{
+    // console.log(item,'item');
+    
+    store.commit('addMenu',item.meta)
+
     //根据 item.meta.path 的值，导航到指定的路由路径
     //如果 item.meta.path 是 /home，那么这段代码就会将页面导航到 /home 路由对应的组件
     router.push(item.meta.path)
