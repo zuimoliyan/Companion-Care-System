@@ -17,6 +17,9 @@ vue-router
 vuex
 <https://vuex.vuejs.org/zh/>
 
+接口文档：用于项目的验证码等数据的校验
+<https://apifox.com/apidoc/shared/205c93aa-6b50-4a1a-85be-b93dc5304443>
+
 ## 路由创建
 
 创建路由和对应界面
@@ -118,3 +121,5 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 ```
 
 ## Header组件完善
+
+## 登录页面编写
