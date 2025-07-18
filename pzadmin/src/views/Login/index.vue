@@ -10,7 +10,7 @@
             <div class="jump-link">
                 <el-link type="primary" @click="handleChange"> {{ formType ? '返回登录' : '注册账号' }} </el-link>
             </div>
-            <el-form :model="loginForm" style="max-width: 600px;" class="demo-ruleForm">
+            <el-form :model="loginForm" :rules="rules" style="max-width: 600px;" class="demo-ruleForm">
                 <el-form-item prop="userName">
                     <el-input v-model="loginForm.userName" placeholder="手机号" :prefix-icon="UserFilled"></el-input>
                 </el-form-item>
@@ -26,6 +26,13 @@
                             <span @click="countdownChange">{{ countdown.validText }}</span>
                         </template>
                     </el-input>
+                </el-form-item>
+
+                <el-form-item>
+                    <!--三目运算，formType是否为真？为真返回为'注册账号' : 为假返回为'登录'-->
+                    <el-button type="primary" :style="{ width: '100%' }" @click="submitForm">
+                        {{ formType ? '注册账号' : '登录' }}
+                    </el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -55,6 +62,37 @@ const countdown = reactive({
 
 // 切换表单（0：登录 1：注册）
 const formType = ref(0);
+
+//账号校验规则
+const validateUser = (rule, value, callback) => {
+    //不能为空
+    if (value === '') {
+        callback(new Error('请输入账号'))
+    } else {
+        const phoneReg = /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/
+        phoneReg.test(value) ? callback() : callback(new Error('手机号格式错误！请输入正确的手机号'))
+    }
+}
+
+//密码校验规则
+const validatePassWord = (rule, value, callback) => {
+    //不能为空
+    if (value === '') {
+        callback(new Error('请输入密码'))
+    } else {
+        const PassWordReg = /^[a-zA-Z0-9]{4,16}$/
+        PassWordReg.test(value) ? callback() : callback(new Error('密码格式错误！请输入4~16位，包含数字、字母'))
+    }
+}
+//表单校验
+const rules = reactive({
+    userName: [{
+        validator: validateUser, trigger: 'blur'
+    }],
+    passWord: [{
+        validator: validatePassWord, trigger: 'blur'
+    }]
+})
 
 // 点击切换登录和注册
 const handleChange = () => {
@@ -88,6 +126,12 @@ const countdownChange = () => {
     }, 1000)
     flag = true
 }
+
+//实现提交表单
+const submitForm = () => {
+
+}
+
 </script>
 
 
