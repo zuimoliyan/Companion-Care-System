@@ -99,33 +99,38 @@ const handleChange = () => {
     formType.value = formType.value ? 0 : 1;
 };
 
-let flag = false
+let flag = false;
 const countdownChange = () => {
     if (flag) {
-        return
+        return;
     }
-    //判断手机号是否合法
-    const phoneReg = /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/
+    // 判断手机号是否合法
+    const phoneReg = /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/;
     if (!loginForm.userName || !phoneReg.test(loginForm.userName)) {
         return ElMessage({
             message: '请检查手机号是否正确',
             type: 'warning',
-        })
+        });
     }
-    //如果已发送就不处理
-    //定时器实现倒计时
-    setInterval(() => {
-        if (countdown.time <= 0) {
-            countdown.time = 60
-            countdown.validText = '获取验证码'
-            flag = false
-        } else {
-            countdown.time -= 1
-            countdown.validText = `剩余${countdown.time}s`
-        }
-    }, 1000)
-    flag = true
-}
+    // 定时器实现倒计时
+    function startCountdown() {
+        let timerId; // 存储定时器的 ID
+        timerId = setInterval(() => {
+            if (countdown.time <= 0) {
+                countdown.time = 60;
+                countdown.validText = '获取验证码';
+                flag = false;
+                clearInterval(timerId); // 清除定时器
+            } else {
+                countdown.time -= 1;
+                countdown.validText = `剩余${countdown.time}s`;
+            }
+        }, 1000);
+        flag = true;
+    }
+    startCountdown();
+};
+
 
 //实现提交表单
 const submitForm = () => {
