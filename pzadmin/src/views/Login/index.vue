@@ -49,7 +49,6 @@ import { UserFilled, Lock, ChatDotSquare } from '@element-plus/icons-vue';
 import { getCode } from "../../api";
 
 //我们设计Element-plus使用了自动按需导入,如果我们自己再导入会导致格式出错
-import 'element-plus/theme-chalk/el-message.css';
 import { ElMessage } from "element-plus";
 
 
@@ -142,8 +141,24 @@ const countdownChange = () => {
             console.log(data, 'data');
             if (data.code === 10000) {
                 ElMessage.success('发送成功')
+            } else {
+                // 处理失败情况
+                ElMessage.error('发送失败，请重试');
+                // 重置倒计时状态
+                countdown.time = 60;
+                countdown.validText = '获取验证码';
+                flag = false;
+                clearInterval(timerId);
             }
-        })
+        }).catch(() => {
+            // 处理请求异常
+            ElMessage.error('网络错误，请稍后重试');
+            // 重置倒计时状态
+            countdown.time = 60;
+            countdown.validText = '获取验证码';
+            flag = false;
+            clearInterval(timerId);
+        });
     }
     startCountdown();
 };

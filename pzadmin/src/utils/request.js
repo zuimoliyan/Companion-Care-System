@@ -30,7 +30,7 @@ http.interceptors.request.use(function (config) {
 http.interceptors.response.use(function (response) {
     // 对接口异常的数据需要给用户提示
     if (response.data.code === -1) {
-        ElMessage.warning(response.data.message)
+        ElMessage.warning('接口异常：',response.data.message)
     }
 
     return response;
