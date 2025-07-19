@@ -32,6 +32,7 @@ const router = useRouter()
 const menuData = reactive(router.options.routes[0].children)
 
 const store = useStore()
+//控制左侧菜单树面板展开与否
 const isCollapse = computed(()=>store.state.menu.isCollapse)
 
 const handleOpen = ()=>{}

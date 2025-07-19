@@ -20,6 +20,9 @@ vuex
 接口文档：用于项目的验证码等数据的校验
 <https://apifox.com/apidoc/shared/205c93aa-6b50-4a1a-85be-b93dc5304443>
 
+axios
+<https://www.axios-http.cn/docs/intro>
+
 ## 路由创建
 
 创建路由和对应界面
