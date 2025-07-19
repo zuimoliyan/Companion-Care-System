@@ -44,9 +44,13 @@
 import { ref, reactive } from "vue";
 //直接使用图标失败，这里是自己加上的图标
 import { UserFilled, Lock, ChatDotSquare } from '@element-plus/icons-vue';
+
 //引入各项api
 import { getCode } from "../../api";
-import { ElMessage } from "element-plus";
+
+//我们设计Element-plus使用了自动按需导入,如果我们自己再导入会导致格式出错
+// import { ElMessage } from "element-plus";
+
 
 
 const imgUrl = new URL('../../../public/login-head.png', import.meta.url).href;
@@ -130,12 +134,12 @@ const countdownChange = () => {
                 countdown.validText = `剩余${countdown.time}s`;
             }
         }, 1000);
-        flag = true
+        flag = true;
         getCode({
             tel: loginForm.userName
         }).then(({ data }) => {
-            console.log(data,'data');
-            if (data.code===10000) {
+            console.log(data, 'data');
+            if (data.code === 10000) {
                 ElMessage.success('发送成功')
             }
         })
