@@ -1,11 +1,18 @@
+<!-- 这里用于实现顶部：1.左侧标签 2.右侧登录信息 -->
 <template>
     <div class="header-container">
         <div class="header-left flex-box">
+            <!-- 点击折叠按钮的图标，实现发送点击信号，实现折叠功能 -->
             <el-icon class="icon" size="20px" @click="store.commit('collapseMenu'), console.log('点击事件')">
                 <Fold />
             </el-icon>
 
+            <!-- 这里的意思是：一个无序列表的单个标签由 1.标签图标 2.标签文字 3.关闭图标 三部分组成-->
             <ul class="flex-box">
+                <!-- 遍历 selectMenu 数组，为每个元素创建一个 <li> 元素 （selectMenu中的元素在menu.js中由addMenu和closeMenu实现）
+                    并根据当前路由路径动态添加 selected 类
+                    这样可以实现根据当前路由高亮显示对应的菜单项 
+                -->
                 <li v-for="(item, index) in selectMenu" :key="item.path" :class="{ selected: route.path === item.path }" class="tab flex-box">
                     <el-icon size="12px">
                         <component :is="item.icon" />
@@ -24,7 +31,7 @@
         </div>
 
         <div class="header-right">
-
+            <!-- 这里套用element-plus的模版 -->
             <el-dropdown>
                 <div class="el-dropdown-link flex-box">
                     <el-avatar> 登录 </el-avatar>
