@@ -49,7 +49,8 @@ import { UserFilled, Lock, ChatDotSquare } from '@element-plus/icons-vue';
 import { getCode } from "../../api";
 
 //我们设计Element-plus使用了自动按需导入,如果我们自己再导入会导致格式出错
-// import { ElMessage } from "element-plus";
+import 'element-plus/theme-chalk/el-message.css';
+import { ElMessage } from "element-plus";
 
 
 
