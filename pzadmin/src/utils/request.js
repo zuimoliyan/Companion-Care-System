@@ -17,7 +17,7 @@ http.interceptors.request.use(function (config) {
 
     //if条件判断当前发送的token是否存在且不属于白名单里，都满足以后将token添加到headers里
     if (token && !whiteUrl.includes(config.url)) {
-        config.headers['X-token'] = token
+        config.headers['x-token'] = token
     }
 
     return config;

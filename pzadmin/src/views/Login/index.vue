@@ -10,7 +10,8 @@
             <div class="jump-link">
                 <el-link type="primary" @click="handleChange"> {{ formType ? '返回登录' : '注册账号' }} </el-link>
             </div>
-            <el-form :model="loginForm" :rules="rules" style="max-width: 600px;" class="demo-ruleForm">
+            <el-form :model="loginForm" :rules="rules" style="max-width: 600px" class="demo-ruleForm"
+                ref="loginFormRef">
                 <el-form-item prop="userName">
                     <el-input v-model="loginForm.userName" placeholder="手机号" :prefix-icon="UserFilled"></el-input>
                 </el-form-item>
@@ -30,7 +31,7 @@
 
                 <el-form-item>
                     <!--三目运算，formType是否为真？为真返回为'注册账号' : 为假返回为'登录'-->
-                    <el-button type="primary" :style="{ width: '100%' }" @click="submitForm">
+                    <el-button type="primary" :style="{ width: '100%' }" @click="submitForm(loginFormRef)">
                         {{ formType ? '注册账号' : '登录' }}
                     </el-button>
                 </el-form-item>
@@ -46,7 +47,7 @@ import { ref, reactive } from "vue";
 import { UserFilled, Lock, ChatDotSquare } from '@element-plus/icons-vue';
 
 //引入各项api
-import { getCode } from "../../api";
+import { getCode, userAuthentication, login } from "../../api";
 
 //我们设计Element-plus使用了自动按需导入,如果我们自己再导入会导致格式出错
 import { ElMessage } from "element-plus";
@@ -163,10 +164,41 @@ const countdownChange = () => {
     startCountdown();
 };
 
+const loginFormRef = ref();
 
 //实现提交表单
-const submitForm = () => {
+const submitForm = async (formEl) => {
+    if (!formEl) return
+    //手动触发校验
+    await formEl.validate((valid, fields) => {
+        //如果校验成功
+        if (valid) {
 
+            //当前是注册页面
+            if (formType.value) {
+                userAuthentication(loginForm).then(({ data }) => {
+                    if (data.code === 10000) {
+                        ElMessage.success('注册成功，请返回登录！')
+                        formType.value = 0
+                    }
+                })
+            } else {
+                //如果是登录页面
+                login(loginForm).then(({ data }) => {
+                    if (data.code === 10000) {
+                        ElMessage.success('登录成功！')
+                        console.log(data);
+
+                        //将token和用户信息缓存到浏览器
+                        localStorage.setItem('pz_token', data.data.token)
+                        localStorage.setItem('pz_userInfo', data.data.ISON.stringify(data.data.userInfo))
+                    }
+                })
+            }
+        } else {
+            console.log('error submit!', fields)
+        }
+    })
 }
 
 </script>
