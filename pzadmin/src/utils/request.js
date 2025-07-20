@@ -39,6 +39,7 @@ http.interceptors.response.use(function (response) {
         localStorage.removeItem('pz_token')
         localStorage.removeItem('pz_userInfo')
 
+        //设置1.5秒后再跳转
         setTimeout(() => {
             window, location.href = window.location.origin
         }, 1500);
