@@ -11,7 +11,11 @@ export const userAuthentication = (data)=>{
 }
 
 //登录页面
-
 export const login = (data)=>{
     return request.post('/login',data)
+}
+
+//权限管理列表
+export const authAdmin = (params)=>{
+    return request.get('/menu/list',{params})
 }

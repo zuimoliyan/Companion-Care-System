@@ -30,7 +30,19 @@ http.interceptors.request.use(function (config) {
 http.interceptors.response.use(function (response) {
     // 对接口异常的数据需要给用户提示
     if (response.data.code === -1) {
-        ElMessage.warning('接口异常：',response.data.message)
+        ElMessage.warning('接口异常：', response.data.message)
+    }
+
+    //token过期或有问题
+    if (response.data.code === -2) {
+        ElMessage.error('token失效，请重新登录!')
+        localStorage.removeItem('pz_token')
+        localStorage.removeItem('pz_userInfo')
+
+        setTimeout(() => {
+            window, location.href = window.location.origin
+        }, 1500);
+
     }
 
     return response;
