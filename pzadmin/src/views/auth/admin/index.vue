@@ -15,8 +15,6 @@ const paginationData = reactive({
 
 onMounted(() => {
     authAdmin(paginationData).then(({ data }) => {
-        //测试用
-        console.log(data,'authAdmin');
     })
 })
 </script>
