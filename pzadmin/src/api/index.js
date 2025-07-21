@@ -19,3 +19,8 @@ export const login = (data)=>{
 export const authAdmin = (params)=>{
     return request.get('/menu/list',{params})
 }
+
+//菜单权限获取
+export const userGetMenu = ()=>{
+    return request.get('/user/getmenu')
+}
