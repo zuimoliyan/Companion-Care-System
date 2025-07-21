@@ -1,21 +1,27 @@
 <template>
     <button @click="dialogFormVisable = true">添加</button>
     <el-dialog v-model="dialogFormVisable" :before-close="beforeClose" title="添加权限" width="500">
-        <el-form ref="formRef" label-width="100px" label-position="left" :model="form">
+        <el-form ref="formRef" label-width="100px" label-position="left" :model="form" :rules="rules">
             <el-form-item label="名称" prop="name">
-                <el-input v-model="form.name" placeholder="请填写权限名称" />
+                <el-input v-model="form.name" placeholder="请填写权限名称" :autofocus="true"/>
             </el-form-item>
 
             <el-form-item label="权限" prop="permissions">
                 <el-tree ref="treeRef" :data="permissionData" style="max-width: 600px;" node-key="id" show-checkbox
-                    :default-checked-keys="defaultKeys" />
+                    :default-checked-keys="defaultKeys" :default-expanded-keys="[2]"/>
             </el-form-item>
         </el-form>
+
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button type="primary" @click="confirm(formRef)">确认</el-button>
+            </div>
+        </template>
     </el-dialog>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { userGetMenu } from '../../../api';
 
 // 关闭弹窗的回调
@@ -38,10 +44,11 @@ const permissionData = ref([]);
 //   console.log('PermissionData.value:', permissionData.value);
 // });
 // 但是会出现权限弹窗里无数据，但是把data改成response就行了
-
-userGetMenu().then((response) => {
-    permissionData.value = response.data.data; // 将 permissionData.value 设置为 response.data.data
-});
+onMounted(() => {
+    userGetMenu().then((response) => {
+        permissionData.value = response.data.data; // 将 permissionData.value 设置为 response.data.data
+    })
+})
 
 
 // form 数据
@@ -54,6 +61,29 @@ const form = reactive({
 const dialogFormVisable = ref(false);
 
 const treeRef = ref()
+
+const rules = reactive({
+    name: [
+        { required: true, message: '请输入权限名称', trigger: ['blur', 'submit'] }
+    ]
+});
+
+
+//表单提交
+const confirm = async (formEl) => {
+
+    if (!formEl) return
+
+    await formEl.validate((valid, fields) => {
+        if (valid) {
+
+        } else {
+            console.log('error submit!', fields)
+        }
+    })
+
+}
+
 </script>
 
 <style lang="less" scoped></style>
