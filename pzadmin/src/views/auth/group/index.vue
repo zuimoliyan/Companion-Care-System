@@ -40,6 +40,7 @@
 <script setup>
 import { ref, reactive, onMounted, nextTick } from 'vue';
 import { userGetMenu, userSetMenu, menuList } from '../../../api';
+import { ElMessage } from 'element-plus';
 
 
 // 选中权限
@@ -96,7 +97,9 @@ const beforeClose = () => {
     //重置表单
     formRef.value.resetFields()
     //treeRef的选择重置
-    treeRef.value.setCheckedKeys(defaultKeys)
+    //defaultKeys 是一个 ref，而 setCheckedKeys 方法可能期望的是一个普通的数组而不是一个 ref 对象
+    //将 defaultKeys 转换为普通的数组形式，然后再传递给 setCheckedKeys 方法
+    treeRef.value.setCheckedKeys(defaultKeys.value)
 };
 
 // form 数据
@@ -117,7 +120,6 @@ const getListData = () => {
         const { list, total } = data.data
         tableData.list = list
         tableData.total = total
-
     })
 }
 
@@ -144,6 +146,8 @@ const confirm = async (formEl) => {
             //表单提交
             userSetMenu({ name: form.name, permissions, id: form.id }).then(({ data }) => {
                 console.log(data);
+                beforeClose()
+                getListData()
             })
         } else {
             console.log("group/index.vue.confirm.formEl.validate：表单校验不通过，为空");
