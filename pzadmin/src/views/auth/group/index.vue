@@ -1,5 +1,19 @@
 <template>
-    <button @click="dialogFormVisable = true">添加</button>
+    <el-button type="primary" @click="open(null)">添加</el-button>
+
+    <el-table :data="tableData.list" style="width: 100%">
+        <el-table-column prop="id" label="id" />
+        <el-table-column prop="name" label="昵称" />
+        <el-table-column prop="permissionName" label="菜单权限" width="500" />
+        <el-table-column label="操作">
+            <template #default="scoped">
+                <div>
+                    <el-button type="primary" @click="open(scoped.row)">编辑</el-button>
+                </div>
+            </template>
+        </el-table-column>
+    </el-table>
+
     <el-dialog v-model="dialogFormVisable" :before-close="beforeClose" title="添加权限" width="500">
         <el-form ref="formRef" label-width="100px" label-position="left" :model="form" :rules="rules">
             <el-form-item v-show="false" prop="id">
@@ -24,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, nextTick } from 'vue';
 import { userGetMenu, userSetMenu, menuList } from '../../../api';
 
 
@@ -54,12 +68,35 @@ onMounted(() => {
     userGetMenu().then((response) => {
         permissionData.value = response.data.data; // 将 permissionData.value 设置为 response.data.data
     })
+    getListData()
 })
 
+//列表数据
+const tableData = reactive({
+    list: [],
+    total: 0
+})
+
+//打开弹窗
+const open = (rowData) => {
+    dialogFormVisable.value = true
+
+    //弹窗打开form生成是异步操作
+    nextTick(() => {
+        if (rowData) {
+            Object.assign(form, { id: rowData.id, name: rowData.name })
+            treeRef.value.setCheckedKeys(rowData.permission)
+        }
+    })
+}
 
 // 关闭弹窗的回调
 const beforeClose = () => {
-    dialogFormVisable.value = false;
+    dialogFormVisable.value = false
+    //重置表单
+    formRef.value.resetFields()
+    //treeRef的选择重置
+    treeRef.value.setCheckedKeys(defaultKeys)
 };
 
 // form 数据
@@ -75,8 +112,11 @@ const paginationData = reactive({
 })
 
 //请求列表数据
-const geiListData = () => {
+const getListData = () => {
     menuList(paginationData).then(({ data }) => {
+        const { list, total } = data.data
+        tableData.list = list
+        tableData.total = total
 
     })
 }
