@@ -14,6 +14,12 @@
         </el-table-column>
     </el-table>
 
+    <div class="pagination-info">
+        <el-pagination v-model:current-page="paginationData.pageNum" v-model:page-size="paginationData.pageSize"
+            :page-sizes="[5, 10, 15, 20]" :background="false" layout="sizes, prev, pager, next" :size="small"
+            :total="tableData.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+    </div>
+
     <el-dialog v-model="dialogFormVisable" :before-close="beforeClose" title="添加权限" width="500">
         <el-form ref="formRef" label-width="100px" label-position="left" :model="form" :rules="rules">
             <el-form-item v-show="false" prop="id">
@@ -110,9 +116,20 @@ const form = reactive({
 });
 
 const paginationData = reactive({
-    pageNum: 1,
-    pageSize: 10
+    pageNum: 1, // 列表页的个数
+    pageSize: 10 // 每页的数据个数
 })
+//定义分页的回调函数
+//1.修改分页
+const handleSizeChange = (val) => {
+    paginationData.pageSize = val
+    getListData()
+}
+//2.点击页码
+const handleCurrentChange = (val) => {
+    paginationData.pageNum = val
+    getListData()
+}
 
 //请求列表数据
 const getListData = () => {
