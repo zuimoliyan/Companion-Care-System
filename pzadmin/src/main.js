@@ -5,6 +5,7 @@ import router from './router'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import 'element-plus/es/components/message/style/css'
 import store from "./store";
+import PanelHead from "./components/panelHead.vue";
 
 //这里实现路由守卫
 router.beforeEach((to, from) => {
@@ -33,4 +34,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 app.use(router)
 //store挂载
 app.use(store)
+
+//全局挂载panelHead组件
+app.component("PanelHead",PanelHead)
+
 app.mount('#app')

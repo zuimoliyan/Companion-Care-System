@@ -1,5 +1,8 @@
 <template>
-    <el-button type="primary" @click="open(null)">添加</el-button>
+    <panel-head />
+    <div class="btns">
+        <el-button icon="Plus" type="primary" @click="open(null)" :size="small">添加</el-button>
+    </div>
 
     <el-table :data="tableData.list" style="width: 100% ; height: 520px;">
         <el-table-column prop="id" label="id" />
@@ -12,7 +15,7 @@
                 </div>
             </template>
         </el-table-column>
-        
+
     </el-table>
 
     <div class="pagination-info">
@@ -176,4 +179,9 @@ const confirm = async (formEl) => {
 
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.btns {
+    padding: 10px 0 10px 10px;
+    background-color: wh;
+}
+</style>
