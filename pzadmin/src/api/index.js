@@ -17,7 +17,7 @@ export const login = (data) => {
 
 //权限管理列表
 export const authAdmin = (params) => {
-    return request.get('/menu/list', { params })
+    return request.get('/auth/admin', { params })
 }
 
 //菜单权限获取
@@ -33,4 +33,9 @@ export const userSetMenu = (data) => {
 //菜单权限列表
 export const menuList = (params) => {
     return request.get('/menu/list', { params })
+}
+
+//权限菜单下拉列表
+export const menuSelectList = () => {
+    return request.get('/menu/selectlist')
 }
