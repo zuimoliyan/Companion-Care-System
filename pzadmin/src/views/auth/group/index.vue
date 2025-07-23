@@ -1,7 +1,7 @@
 <template>
     <el-button type="primary" @click="open(null)">添加</el-button>
 
-    <el-table :data="tableData.list" style="width: 100%">
+    <el-table :data="tableData.list" style="width: 100% ; height: 520px;">
         <el-table-column prop="id" label="id" />
         <el-table-column prop="name" label="昵称" />
         <el-table-column prop="permissionName" label="菜单权限" width="500" />
@@ -12,11 +12,12 @@
                 </div>
             </template>
         </el-table-column>
+        
     </el-table>
 
     <div class="pagination-info">
         <el-pagination v-model:current-page="paginationData.pageNum" v-model:page-size="paginationData.pageSize"
-            :page-sizes="[5, 10, 15, 20]" :background="false" layout="sizes, prev, pager, next" :size="small"
+            :page-sizes="[5, 10, 15, 20]" :background="false" layout="sizes, prev, pager, next" :size="large"
             :total="tableData.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
 
