@@ -80,6 +80,7 @@ const permissionName = (id) => {
     return data ? data.name : '超级管理员'
 }
 
+
 const open = () => {
 
 }
