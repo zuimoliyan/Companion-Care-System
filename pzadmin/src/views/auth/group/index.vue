@@ -1,7 +1,7 @@
 <template>
     <panel-head />
     <div class="btns">
-        <el-button icon="Plus" type="primary" @click="open(null)" :size="small">添加</el-button>
+        <el-button icon="Plus" type="primary" @click="open(null)">添加</el-button>
     </div>
 
     <el-table :data="tableData.list" style="width: 100% ; height: 520px;">
@@ -19,8 +19,8 @@
 
     <div class="pagination-info">
         <el-pagination v-model:current-page="paginationData.pageNum" v-model:page-size="paginationData.pageSize"
-            :page-sizes="[5, 10, 15, 20]" :background="false" layout="sizes, prev, pager, next" :size="large"
-            :total="tableData.total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            :page-sizes="[5, 10, 15, 20]" :background="false" layout="sizes, prev, pager, next" :total="tableData.total"
+            @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
 
     <el-dialog v-model="dialogFormVisable" :before-close="beforeClose" title="添加权限" width="500">

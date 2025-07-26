@@ -28,25 +28,29 @@ const mutations = {
         state.selectMenu.splice(index, 1)
     },
     dynamicMenu(state, payload) {
-        //通过glob导入文件
+        // 通过 glob 导入文件
         const modules = import.meta.glob('../views/**/**/*.vue')
-        function routerSet(router) {
-            router.forEach(route => {
-                //判断没有子菜单，拼接路由数据
-                if (!route.chlidren) {
-                    const url = '../views${router.meta.path}/index.vue'
+        console.log(modules);
+
+        function routerSet(routes) {
+            routes.forEach(route => {
+                // 判断没有子菜单，拼接路由数据
+                if (!route.children) {
+                    const url = `../views${route.meta.path}/index.vue`
                     // 拿到获取的vue组件
-                    route.componet = modules[url]
+                    route.component = modules[url]
                 } else {
-                    routerSet(route.chlidren)
+                    console.log('处理子路由:', route.meta.path, '子路由配置:', route.children);
+                    routerSet(route.children)
                 }
             })
-
         }
+        console.log('最终路由列表:', state.routerList);
         routerSet(payload)
-        //拿到完整的路由数据
+        // 拿到完整的路由数据
         state.routerList = payload
     }
+
 }
 
 export default {

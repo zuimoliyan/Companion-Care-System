@@ -56,7 +56,7 @@ import { computed } from "vue";
 import { useStore } from "vuex";
 
 import { useRoute, useRouter } from "vue-router";
-import { ElAlert } from "element-plus";
+
 //当前路由对象
 const route = useRoute()
 //用于实现点击关闭tag功能
@@ -114,7 +114,7 @@ const handleClick = (command) => {
         setTimeout(() => {
             localStorage.removeItem('pz_token')
             localStorage.removeItem('pz_userInfo')
-
+            localStorage.removeItem('pz_v3pz')
             window.location.href = window.location.origin
         }, 300);
 

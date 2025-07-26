@@ -42,7 +42,7 @@
 
 <script setup>
 // 导入响应式变量
-import { ref, reactive, computed ,toRaw} from "vue";
+import { ref, reactive, computed, toRaw } from "vue";
 //直接使用图标失败，这里是自己加上的图标
 import { UserFilled, Lock, ChatDotSquare } from '@element-plus/icons-vue';
 //引入各项api
@@ -195,10 +195,10 @@ const submitForm = async (formEl) => {
                         //新增获取用户权限
                         menuPermissions().then(({ data }) => {
                             store.commit('dynamicMenu', data.data)
-                            console.log(routerList,'routerList');
+                            console.log(routerList, 'routerList');
                             //toRaw：将一个响应式的数据转换为普通数据
-                            toRaw(routerList.value).forEach(item=>{
-                                router.addRoute('main',item)
+                            toRaw(routerList.value).forEach(item => {
+                                router.addRoute('main', item)
                             })
                             //跳转到首页
                             router.push('/')
