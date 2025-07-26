@@ -13,7 +13,8 @@
                     并根据当前路由路径动态添加 selected 类
                     这样可以实现根据当前路由高亮显示对应的菜单项 
                 -->
-                <li v-for="(item, index) in selectMenu" :key="item.path" :class="{ selected: route.path === item.path }" class="tab flex-box">
+                <li v-for="(item, index) in selectMenu" :key="item.path" :class="{ selected: route.path === item.path }"
+                    class="tab flex-box">
                     <el-icon size="12px">
                         <component :is="item.icon" />
                     </el-icon>
@@ -21,7 +22,7 @@
                         {{ item.name }}
                     </router-link>
 
-                    <el-icon size="12px" class="close" @click="closeTab(item,index)">
+                    <el-icon size="12px" class="close" @click="closeTab(item, index)">
                         <Close />
                     </el-icon>
 
@@ -32,18 +33,14 @@
 
         <div class="header-right">
             <!-- 这里套用element-plus的模版 -->
-            <el-dropdown>
+            <el-dropdown @command="handleClick">
                 <div class="el-dropdown-link flex-box">
                     <el-avatar> 登录 </el-avatar>
                     <p class="user-name">admin</p>
                 </div>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item>Action 1</el-dropdown-item>
-                        <el-dropdown-item>Action 2</el-dropdown-item>
-                        <el-dropdown-item>Action 3</el-dropdown-item>
-                        <el-dropdown-item disabled>Action 4</el-dropdown-item>
-                        <el-dropdown-item divided>Action 5</el-dropdown-item>
+                        <el-dropdown-item command="cancel">退出</el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -58,7 +55,8 @@ import { computed } from "vue";
 
 import { useStore } from "vuex";
 
-import { useRoute , useRouter} from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { ElAlert } from "element-plus";
 //当前路由对象
 const route = useRoute()
 //用于实现点击关闭tag功能
@@ -79,30 +77,49 @@ const selectMenu = computed(() => store.state.menu.selectMenu)
 //    跳转到selectMenuData-1项
 //   3.2如果是不是最后一位为焦点：
 //   直接调用 state.selectMenu.splice(index,1)
-const closeTab = (item,index)=>{
-    store.commit('closeMenu',item)
+const closeTab = (item, index) => {
+    store.commit('closeMenu', item)
     // 删除的是非当前页tag
-    if (route.path!==item.path) {
+    if (route.path !== item.path) {
         return
     }
 
     const selectMenuData = selectMenu.value
     //如果删除的是最后一项
-    if (index===selectMenuData.length) {
+    if (index === selectMenuData.length) {
         // 如果tag只有一位
         if (!selectMenuData.length) {
             router.push('/')
-        }else{
+        } else {
             router.push({
-                path:selectMenuData[index-1].path
+                path: selectMenuData[index - 1].path
             })
         }
-    }else{
+    } else {
         //如果删除的是中间位tag
         router.push({
-            path:selectMenuData[index].path
+            path: selectMenuData[index].path
         })
     }
+}
+
+const handleClick = (command) => {
+    //如果点击的是退出
+    if (command === "cancel") {
+        ElNotification({
+            title: 'Success',
+            message: '退出登录成功',
+            type: 'success',
+        })
+        setTimeout(() => {
+            localStorage.removeItem('pz_token')
+            localStorage.removeItem('pz.userInfo')
+
+            window.location.href = window.location.origin
+        }, 300);
+
+    }
+
 }
 </script>
 
@@ -147,17 +164,18 @@ const closeTab = (item,index)=>{
             }
 
             &.selected {
-            a {
-                color:#409eff;
-            }
+                a {
+                    color: #409eff;
+                }
 
-            i {
-                color:#409eff;
+                i {
+                    color: #409eff;
+                }
+
+                background-color: #f5f5f5;
             }
-            background-color: #f5f5f5; 
         }
-        }
-        
+
 
         .tab:hover {
             background-color: #f5f5f5;

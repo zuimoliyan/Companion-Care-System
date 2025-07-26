@@ -42,15 +42,15 @@
 
 <script setup>
 // 导入响应式变量
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 //直接使用图标失败，这里是自己加上的图标
 import { UserFilled, Lock, ChatDotSquare } from '@element-plus/icons-vue';
 //引入各项api
-import { getCode, userAuthentication, login } from "../../api";
+import { getCode, userAuthentication, login, menuPermissions } from "../../api";
 //我们设计Element-plus使用了自动按需导入,如果我们自己再导入会导致格式出错
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
-
+import { useStore } from "vuex";
 
 
 const imgUrl = new URL('../../../public/login-head.png', import.meta.url).href;
@@ -165,7 +165,8 @@ const countdownChange = () => {
 
 const router = useRouter()
 const loginFormRef = ref();
-
+const store = useStore()
+const routerList = computed(() => store.state.menu.routerList)
 //实现提交表单
 const submitForm = async (formEl) => {
     if (!formEl) return
@@ -192,8 +193,15 @@ const submitForm = async (formEl) => {
                         //将token和用户信息缓存到浏览器
                         localStorage.setItem('pz_token', data.data.token)
                         localStorage.setItem('pz_userInfo', JSON.stringify(data.data.userInfo))
-                        //跳转到首页
-                        router.push('/')
+                        //新增获取用户权限
+                        menuPermissions().then(({ data }) => {
+                            store.commit('dynamicMenu', data.data)
+                            console.log(routerList,'routerList');
+                            
+                            //跳转到首页
+                            router.push('/')
+                        })
+
                     }
                 })
             }
