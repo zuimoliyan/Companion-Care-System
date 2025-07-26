@@ -7,6 +7,16 @@ import 'element-plus/es/components/message/style/css'
 import store from "./store";
 import PanelHead from "./components/panelHead.vue";
 
+
+//刷新后的动态路由添加
+const localData = localStorage.getItem('pz_v3pz')
+if (localData) {
+  store.commit('dynamicMenu', JSON.parse(localData).menu.routerList)
+  store.state.menu.routerList.forEach(item => {
+    router.addRoute('main',item)
+  })
+}
+
 //这里实现路由守卫
 router.beforeEach((to, from) => {
   //先获取浏览器存储的token信息
@@ -36,6 +46,6 @@ app.use(router)
 app.use(store)
 
 //全局挂载panelHead组件
-app.component("PanelHead",PanelHead)
+app.component("PanelHead", PanelHead)
 
 app.mount('#app')

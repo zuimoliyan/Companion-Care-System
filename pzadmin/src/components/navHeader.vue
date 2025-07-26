@@ -113,7 +113,7 @@ const handleClick = (command) => {
         })
         setTimeout(() => {
             localStorage.removeItem('pz_token')
-            localStorage.removeItem('pz.userInfo')
+            localStorage.removeItem('pz_userInfo')
 
             window.location.href = window.location.origin
         }, 300);

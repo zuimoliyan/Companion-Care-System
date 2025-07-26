@@ -42,7 +42,7 @@
 
 <script setup>
 // 导入响应式变量
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed ,toRaw} from "vue";
 //直接使用图标失败，这里是自己加上的图标
 import { UserFilled, Lock, ChatDotSquare } from '@element-plus/icons-vue';
 //引入各项api
@@ -188,7 +188,6 @@ const submitForm = async (formEl) => {
                 login(loginForm).then(({ data }) => {
                     if (data.code === 10000) {
                         ElMessage.success('登录成功！')
-                        console.log(data);
 
                         //将token和用户信息缓存到浏览器
                         localStorage.setItem('pz_token', data.data.token)
@@ -197,7 +196,10 @@ const submitForm = async (formEl) => {
                         menuPermissions().then(({ data }) => {
                             store.commit('dynamicMenu', data.data)
                             console.log(routerList,'routerList');
-                            
+                            //toRaw：将一个响应式的数据转换为普通数据
+                            toRaw(routerList.value).forEach(item=>{
+                                router.addRoute('main',item)
+                            })
                             //跳转到首页
                             router.push('/')
                         })

@@ -1,8 +1,11 @@
+
+const localData = localStorage.getItem('pz_v3pz')
+
 // state 存储应用的全局状态;包含两个属性
-const state = {
+const state = localData ? localData.menu : {
     isCollapse: false, //是否折叠
     selectMenu: [], //存储选中的菜单项
-    routerList:[]
+    routerList: []
 }
 
 const mutations = {
@@ -25,10 +28,8 @@ const mutations = {
         state.selectMenu.splice(index, 1)
     },
     dynamicMenu(state, payload) {
-        console.log(payload)
         //通过glob导入文件
         const modules = import.meta.glob('../views/**/**/*.vue')
-        console.log(modules);
         function routerSet(router) {
             router.forEach(route => {
                 //判断没有子菜单，拼接路由数据
@@ -44,7 +45,7 @@ const mutations = {
         }
         routerSet(payload)
         //拿到完整的路由数据
-        state.routerList =  payload
+        state.routerList = payload
     }
 }
 
