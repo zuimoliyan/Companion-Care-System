@@ -10,12 +10,27 @@ import Login from "../views/Login/index.vue";
 // import Group from "../views/auth/group/index.vue";
 // import Order from "../views/vppz/order/index.vue";
 // import Staff from "../views/vppz/staff/index.vue";
-
 const routes = [
   {
     path: '/',
     component: Layout,
     name: 'main',
+    redirect: (to) => {
+      const localData = localStorage.getItem('pz_v3pz');
+      if (localData) {
+        const parsedData = JSON.parse(localData);
+        const routerList = parsedData.menu.routerList;
+        if (routerList?.length > 0) {
+          // 确保返回绝对路径
+          const firstPath = routerList[0].path;
+          return firstPath.startsWith('/')
+            ? firstPath
+            : `/${firstPath}`;
+        }
+      }
+      // 无有效路径时重定向到登录页
+      return '/Login';
+    },
     children: [
       // {
       //   path: 'dashboard',

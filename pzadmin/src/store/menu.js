@@ -5,7 +5,8 @@ const localData = localStorage.getItem('pz_v3pz')
 const state = localData ? localData.menu : {
     isCollapse: false, //是否折叠
     selectMenu: [], //存储选中的菜单项
-    routerList: []
+    routerList: [],
+    menuActive: '1-1'
 }
 
 const mutations = {
@@ -49,6 +50,11 @@ const mutations = {
         routerSet(payload)
         // 拿到完整的路由数据
         state.routerList = payload
+    },
+    updateMenuActive(state, payload) {
+        console.log("执行updateMenuActive修改");
+        
+        state.menuActive = payload
     }
 
 }

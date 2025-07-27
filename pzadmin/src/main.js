@@ -24,14 +24,19 @@ router.beforeEach((to, from) => {
 
   //判断 非登录页面且token不存在 的情况
   if (!token && to.path !== '/Login') {
+    console.log("非登录页面且token不存在");
+    
     return '/Login'
   }
   //如果是已经登录，但还是要访问登录页面，我们就自动帮他跳转到根目录
   else if (token && to.path === '/Login') {
+    console.log("如果是已经登录，但还是要访问登录页面");
     return '/'
   }
   //其他情况不做处理
   else {
+    console.log("不做处理");
+    
     return true
   }
 })

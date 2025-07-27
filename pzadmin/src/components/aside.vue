@@ -7,8 +7,8 @@
          控制页面的展开和折叠，接收的是 navHeader.vue 中对于logo的 点击：@click="store.commit('collapseMenu')
   -->
   <el-menu :style="{ width: !isCollapse ? '230px' : '64px' }" active-text-color="#ffd04b" background-color="#545c64"
-    class="aside-container" default-active="2" text-color="#fff" @open="handleOpen" @close="handleClose"
-    :collapse="isCollapse">
+    class="aside-container" text-color="#fff" @open="handleOpen" @close="handleClose"
+    :default-active="active" :collapse="isCollapse">
     <p class="logo" @click="goToRoot">{{ isCollapse ? 'DIDI' : 'DIDI陪诊' }}</p>
 
     <!-- 将具体的一级二级菜单挂载到主框架 -->
@@ -27,6 +27,8 @@ import { useStore } from "vuex";
 
 
 const router = useRouter()
+
+const active = computed(() => store.state.menu.menuActive)
 
 //创建响应式的数据
 // const menuData = reactive(router.options.routes[0].children)

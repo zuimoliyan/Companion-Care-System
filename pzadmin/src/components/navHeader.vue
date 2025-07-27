@@ -35,8 +35,8 @@
             <!-- 这里套用element-plus的模版 -->
             <el-dropdown @command="handleClick">
                 <div class="el-dropdown-link flex-box">
-                    <el-avatar> 登录 </el-avatar>
-                    <p class="user-name">admin</p>
+                    <el-avatar :src="userInfo.avatar" />
+                    <p class="user-name">{{ userInfo.name }}</p>
                 </div>
                 <template #dropdown>
                     <el-dropdown-menu>
@@ -57,6 +57,8 @@ import { useStore } from "vuex";
 
 import { useRoute, useRouter } from "vue-router";
 
+
+const userInfo = JSON.parse(localStorage.getItem('pz_userInfo'))
 //当前路由对象
 const route = useRoute()
 //用于实现点击关闭tag功能
@@ -104,22 +106,30 @@ const closeTab = (item, index) => {
 }
 
 const handleClick = (command) => {
-    //如果点击的是退出
     if (command === "cancel") {
+        // 临时添加路由守卫绕过重定向检查
+        const removeGuard = router.beforeEach((to, from, next) => {
+            if (to.path === '/') {
+                next('/Login'); // 直接重定向到登录页
+            } else {
+                next();
+            }
+            removeGuard(); // 立即移除守卫
+        });
+
         ElNotification({
             title: 'Success',
             message: '退出登录成功',
             type: 'success',
         })
+
         setTimeout(() => {
-            localStorage.removeItem('pz_token')
-            localStorage.removeItem('pz_userInfo')
-            localStorage.removeItem('pz_v3pz')
-            window.location.href = window.location.origin
+            localStorage.removeItem('pz_token');
+            localStorage.removeItem('pz_userInfo');
+            localStorage.removeItem('pz_v3pz');
+            router.push('/'); // 触发守卫重定向
         }, 300);
-
     }
-
 }
 </script>
 
