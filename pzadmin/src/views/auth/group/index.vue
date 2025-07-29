@@ -9,9 +9,9 @@
         <el-table-column prop="name" label="昵称" />
         <el-table-column prop="permissionName" label="菜单权限" width="500" />
         <el-table-column label="操作">
-            <template #default="scoped">
+            <template #default="scope">
                 <div>
-                    <el-button type="primary" @click="open(scoped.row)">编辑</el-button>
+                    <el-button type="primary" @click="open(scope.row)">编辑</el-button>
                 </div>
             </template>
         </el-table-column>

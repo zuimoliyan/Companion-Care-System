@@ -4,9 +4,9 @@
         <el-table-column prop="id" label="id" />
         <el-table-column prop="name" label="昵称" />
         <el-table-column prop="permissions_id" label="所属组别">
-            <template #default="scoped">
+            <template #default="scope">
                 <div>
-                    {{ permissionName(scoped.row.permissions_id) }}
+                    {{ permissionName(scope.row.permissions_id) }}
                 </div>
             </template>
         </el-table-column>
@@ -14,29 +14,29 @@
         <el-table-column prop="mobile" label="手机号" />
 
         <el-table-column prop="active" label="状态">
-            <template #default="scoped">
-                <el-tag :type="scoped.row.active ? 'success' : 'danger'">
-                    {{ scoped.row.active ? "正常" : "失效" }}
+            <template #default="scope">
+                <el-tag :type="scope.row.active ? 'success' : 'danger'">
+                    {{ scope.row.active ? "正常" : "失效" }}
                 </el-tag>
             </template>
         </el-table-column>
 
         <el-table-column label="创建时间">
-            <template #default="scoped">
+            <template #default="scope">
                 <div class="flex-box">
                     <el-icon>
                         <Clock />
                     </el-icon>
-                    <span style="margin-left: 10px;">{{ scoped.row.create_tiem }}</span>
+                    <span style="margin-left: 10px;">{{ scope.row.create_tiem }}</span>
                 </div>
 
             </template>
         </el-table-column>
 
         <el-table-column label="操作">
-            <template #default="scoped">
+            <template #default="scope">
                 <div>
-                    <el-button type="primary" @click="open(scoped.row)">编辑</el-button>
+                    <el-button type="primary" @click="open(scope.row)">编辑</el-button>
                 </div>
             </template>
         </el-table-column>

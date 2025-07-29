@@ -2,6 +2,56 @@
     <div class="btns">
         <el-button icon="Plus" type="primary" @click="open(null)">添加</el-button>
     </div>
+
+    <el-table :data="tableData.list" style="width: 100% ; height: 520px;" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" />
+        <el-table-column prop="id" label="id" />
+        <el-table-column prop="name" label="昵称" />
+        <el-table-column label="菜单权限">
+            <template #default="scope">
+                <el-image style="width:50px;height:50px" :src="scope.row.avatar" />
+            </template>
+        </el-table-column>
+
+        <el-table-column prop="sex" label="性别">
+            <template #default="scope">
+                {{ scope.row.sex === '1' ? '男' : '女' }}
+            </template>
+        </el-table-column>
+        <el-table-column prop="mobile" label="手机号" />
+
+        <el-table-column prop="active" label="状态">
+            <template #default="scope">
+                <el-tag :type="scope.row.active ? 'success' : 'danger'">
+                    {{ scope.row.active ? "生效" : "失效" }}
+                </el-tag>
+            </template>
+        </el-table-column>
+
+        <el-table-column label="创建时间">
+            <template #default="scope">
+                <div class="flex-box">
+                    <el-icon>
+                        <Clock />
+                    </el-icon>
+                    <span style="margin-left: 10px;">{{ scope.row.create_time }}</span>
+                </div>
+            </template>
+        </el-table-column>
+
+        <el-table-column label="操作">
+            <template #default="scope">
+                <div>
+                    <el-button type="primary" @click="open(scope.row)">编辑</el-button>
+                </div>
+            </template>
+        </el-table-column>
+    </el-table>
+    <div class="pagination-info">
+        <el-pagination v-model:current-page="paginationData.pageNum" v-model:page-size="paginationData.pageSize"
+            :page-sizes="[5, 10, 15, 20]" :background="false" layout="sizes, prev, pager, next" :total="tableData.total"
+            @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+    </div>
     <el-dialog v-model="dialogFormVisable" :before-close="beforeClose" title="培护士添加" width="500">
         <el-form ref="formRef" label-width="100px" label-position="left" :model="form" :rules="rules">
             <el-form-item v-show="false" prop="id">
@@ -28,8 +78,8 @@
             </el-form-item>
             <el-form-item label="是否生效" prop="active">
                 <el-radio-group v-model="form.active">
-                    <el-radio value="0" >失效</el-radio>
-                    <el-radio value="1" >生效</el-radio>
+                    <el-radio value="0">失效</el-radio>
+                    <el-radio value="1">生效</el-radio>
                 </el-radio-group>
             </el-form-item>
         </el-form>
@@ -62,14 +112,46 @@
 
 <script setup>
 import { reactive, ref, onMounted } from "vue";
-import { photoList, companion } from "../../../api";
+import { photoList, companion, companionList } from "../../../api";
 import { ElMessage } from "element-plus";
+import dayjs from "dayjs";
 
 onMounted(() => {
     photoList().then(({ data }) => {
         fileList.value = data.data
     })
+    getListData()
 })
+
+//分页数据
+const paginationData = reactive({
+    pageNum: 1,
+    pageSize: 10
+})
+
+const tableData = reactive({
+    list: [],
+    total: 0
+})
+
+
+const handleSelectionChange = () => {
+
+}
+
+const getListData = () => {
+    console.log("执行getListData");
+
+    companionList(paginationData).then(({ data }) => {
+        const { list, total } = data.data
+        list.forEach(item => {
+            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD')
+        })
+        tableData.list = list
+        tableData.total = total
+    })
+}
+
 const confirmImage = () => {
     form.avatar = fileList.value[selectIndex.value].url
     dialogImgVisable.value = false
@@ -82,7 +164,7 @@ const dialogFormVisable = ref(false)
 //点击关闭表单弹窗
 const beforeClose = () => {
     dialogFormVisable.value = false
-    formRef.value.resetFileds()
+    formRef.value.resetFields()
 }
 //点击关闭头像选择弹窗
 const beforeImageClose = () => {
