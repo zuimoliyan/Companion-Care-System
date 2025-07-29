@@ -1,5 +1,5 @@
 <template>
-    <panel-head />
+    <panel-head :router="route" />
     <div class="btns">
         <el-button icon="Plus" type="primary" @click="open(null)">添加</el-button>
     </div>
@@ -49,9 +49,9 @@
 <script setup>
 import { ref, reactive, onMounted, nextTick } from 'vue';
 import { userGetMenu, userSetMenu, menuList } from '../../../api';
+import { useRoute } from "vue-router";
 
-
-
+const route = useRoute()
 // 选中权限
 const defaultKeys = ref([4, 5]);
 

@@ -1,7 +1,19 @@
 <template>
+    <panel-head :router="route" />
     <div class="btns">
         <el-button icon="Plus" type="primary" @click="open(null)">添加</el-button>
+
+        <el-popconfirm width="220" :icon="InfoFilled" icon-color="#626AEF" title="是否确定要删除?" @cancel="onCancel">
+            <template #reference>
+                <el-button type="danger" icon="Delete">删除</el-button>
+            </template>
+            <template #actions="{ confirmDelete, cancel }">
+                <el-button size="small" @click="cancel">取消</el-button>
+                <el-button type="danger" size="small" :disabled="clicked" @click="confirmDelete">确认</el-button>
+            </template>
+        </el-popconfirm>
     </div>
+
 
     <el-table :data="tableData.list" style="width: 100% ; height: 520px;" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
@@ -111,10 +123,13 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from "vue";
-import { photoList, companion, companionList } from "../../../api";
+import { reactive, ref, onMounted, nextTick } from "vue";
+import { photoList, companion, companionList, deleteCompanion } from "../../../api";
 import { ElMessage } from "element-plus";
 import dayjs from "dayjs";
+import { useRoute } from "vue-router";
+
+const route = useRoute()
 
 onMounted(() => {
     photoList().then(({ data }) => {
@@ -134,9 +149,25 @@ const tableData = reactive({
     total: 0
 })
 
+//存储勾选列表的数据
+const selectTableData = ref([])
+const handleSelectionChange = (val) => {
+    selectTableData.value = val.map(item => ({ id: item.id }))
+}
 
-const handleSelectionChange = () => {
-
+//删除表单数据
+const confirmDelete = () => {
+    //没有选择
+    if (!selectTableData.value.length) {
+        return ElMessage.warning("请至少选择一项！")
+    }
+    deleteCompanion({ id: selectTableData.value }).then(({ data }) => {
+        //如果请求成功
+        if (data.code === 10000) {
+            ElMessage.success("删除成功！")
+            getListData()
+        }
+    })
 }
 
 const getListData = () => {
@@ -204,6 +235,7 @@ const confirm = async (formEl) => {
                 if (data.code === 10000) {
                     ElMessage.success("提交成功");
                     beforeClose();
+                    getListData()
                 } else {
                     ElMessage.error(data.message);
                 }
@@ -214,9 +246,17 @@ const confirm = async (formEl) => {
     });
 }
 //点击添加按钮
-const open = () => {
+const open = (rowData = {}) => {
     dialogFormVisable.value = true
+    nextTick(() => {
+        //如果是编辑
+        if (rowData) {
+            Object.assign(form, rowData)
+        }
+    })
 }
+
+
 //选择头像弹窗
 const dialogImgVisable = ref(false)
 const fileList = ref([])

@@ -64,3 +64,8 @@ export const companion = (data) => {
 export const companionList = (params) => {
     return request.get('/companion/list', { params })
 }
+
+//培护士删除
+export const deleteCompanion = (data) => {
+    return request.post('/delete/companion', data)
+}

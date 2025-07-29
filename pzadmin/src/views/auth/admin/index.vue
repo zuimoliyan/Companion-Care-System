@@ -1,5 +1,5 @@
 <template>
-    <panel-head />
+    <panel-head :router="route" />
     <el-table :data="tableData.list" style="width: 100% ; height: 520px;">
         <el-table-column prop="id" label="id" />
         <el-table-column prop="name" label="昵称" />
@@ -27,8 +27,9 @@
                     <el-icon>
                         <Clock />
                     </el-icon>
-                    <span style="margin-left: 10px;">{{ scope.row.create_time }}</span>
+                    <span style="margin-left: 10px;">{{ scope.row.create_tiem }}</span>
                 </div>
+
             </template>
         </el-table-column>
 
@@ -76,6 +77,9 @@
 import { authAdmin, menuSelectList, updateUser } from "../../../api";
 import { ref, reactive, onMounted } from "vue";
 import dayjs from "dayjs";
+import { useRoute } from "vue-router";
+
+const route = useRoute()
 
 //列表数据
 const tableData = reactive({
@@ -100,7 +104,7 @@ const getListData = () => {
     authAdmin(paginationData).then(({ data }) => {
         const { list, total } = data.data
         list.forEach(item => {
-            item.create_time = dayjs(item.create_time).format('YYYY-MM-DD')
+            item.create_tiem = dayjs(item.create_tiem).format('YYYY-MM-DD')
         })
         tableData.list = list
         tableData.total = total
