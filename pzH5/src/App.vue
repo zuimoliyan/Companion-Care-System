@@ -1,7 +1,5 @@
 <template>
-  <div>Layout</div>
   <RouterView />
-  <HelloWorld />
 </template>
 
 
