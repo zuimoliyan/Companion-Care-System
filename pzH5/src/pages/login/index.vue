@@ -17,7 +17,12 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, getCurrentInstance } from "vue";
+import { useRouter } from "vue-router";
+import { showNotify, closeNotify } from 'vant';
+import 'vant/es/notify/style'
+const router = useRouter()
+const { proxy } = getCurrentInstance()
 
 //表单数据
 const form = reactive({
@@ -25,8 +30,20 @@ const form = reactive({
     passWord: ''
 })
 //表单提交
-const onSubmit = () => {
+const onSubmit = async () => {
+    const { data } = await proxy.$api.login(form)
 
+    if (data.code === 10000) {
+
+        localStorage.setItem('h5_token', data.data.token)
+        localStorage.setItem('h5_userInfo', JSON.stringify(data.data.token))
+        showNotify({ type: 'success', message: '登录成功' });
+        setTimeout(() => {
+            closeNotify();
+            router.push('/home')
+        }, 1000);
+
+    }
 }
 </script>
 
