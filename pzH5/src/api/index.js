@@ -10,5 +10,9 @@ export default {
     //获取主页banner的数据
     index() {
         return request.get('Index/index')
-    }
+    },
+    //订单详情信息
+    h5Companion() {
+        return request.get('h5/companion')
+    },
 }

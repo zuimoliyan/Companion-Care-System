@@ -5,15 +5,38 @@
             填写服务订单
         </div>
         <StatusBar item="0" />
+
+        <van-cell class="cell">
+            <template #title>
+                <van-image :src="createInfo.service.serviceImg" width="25" height="25"/>
+                <span class="serve-name">
+                    {{ createInfo.service.serviceName }}
+                </span>
+            </template>
+        </van-cell>
     </div>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router";
 import StatusBar from "../../components/statusBar.vue";
+import { onMounted, getCurrentInstance, reactive } from "vue";
 
+
+const createInfo = reactive({
+    companion: [],
+    hospitals: [],
+    service: {},
+})
+//获取当前vue实例
+const { proxy } = getCurrentInstance()
+onMounted(async () => {
+    const { data } = await proxy.$api.h5Companion()
+    Object.assign(createInfo, data.data)
+    console.log(createInfo);
+    
+})
 const router = useRouter()
-
 
 
 //点击返回上级页面
