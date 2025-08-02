@@ -8,19 +8,36 @@
 
         <van-cell class="cell">
             <template #title>
-                <van-image :src="createInfo.service.serviceImg" width="25" height="25"/>
-                <span class="serve-name">
+                <van-image :src="createInfo.service.serviceImg" width="25" height="25" />
+                <span class="server-name">
                     {{ createInfo.service.serviceName }}
                 </span>
             </template>
+            <template #default>
+                <div class="service-text">服务内容</div>
+            </template>
         </van-cell>
+        <van-cell-group class="cell">
+            <van-cell>
+                <template #title>就诊医院</template>
+                <template #default>
+                    <div @click="showHospital = true">
+                        {{ form.hospital_name || "请选择就诊医院" }}
+                        <van-icon name="arrow" />
+                    </div>
+                </template>
+            </van-cell>
+        </van-cell-group>
+        <van-popup v-model:show="showHospital" round position="bottom" :style="{ height: '40%' }">
+            <van-picker :columns="showHospColumns" @confirm="showHospOnConfirm" @cancel="showHospital = false" />
+        </van-popup>
     </div>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router";
 import StatusBar from "../../components/statusBar.vue";
-import { onMounted, getCurrentInstance, reactive } from "vue";
+import { onMounted, getCurrentInstance, reactive, ref, computed } from "vue";
 
 
 const createInfo = reactive({
@@ -28,16 +45,37 @@ const createInfo = reactive({
     hospitals: [],
     service: {},
 })
+
+const showHospColumns = computed(() => {
+    return createInfo.hospitals.map(item => {
+        return { text: item.name, value: item.id }
+    })
+})
+
+//form数据
+const form = reactive({
+
+})
+
+//选择医院
+const showHospOnConfirm = (item) => {
+    form.hospital_id = item.selectedValues[0].value
+    form.hospital_name = item.selectedOptions[0].text
+    //关闭弹出层
+    showHospital.value = false
+}
+
 //获取当前vue实例
 const { proxy } = getCurrentInstance()
 onMounted(async () => {
     const { data } = await proxy.$api.h5Companion()
     Object.assign(createInfo, data.data)
     console.log(createInfo);
-    
+
 })
 const router = useRouter()
-
+//就诊医院的响应式变量
+const showHospital = ref(false)
 
 //点击返回上级页面
 const goBack = () => {
