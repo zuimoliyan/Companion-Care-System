@@ -4,8 +4,10 @@
             <van-icon @click="goBack" name="arrow-left" class="header-left" size="30" />
             填写服务订单
         </div>
+        <!--订单进度条-->
         <StatusBar item="0" />
 
+        <!--表单的标题栏，左侧 就诊医院，右侧服务内容-->
         <van-cell class="cell">
             <template #title>
                 <van-image :src="createInfo.service.serviceImg" width="25" height="25" />
@@ -17,6 +19,8 @@
                 <div class="service-text">服务内容</div>
             </template>
         </van-cell>
+
+        <!--就诊医院的弹窗选择-->
         <van-cell-group class="cell">
             <van-cell>
                 <template #title>就诊医院</template>
@@ -31,6 +35,27 @@
         <van-popup v-model:show="showHospital" round position="bottom" :style="{ height: '40%' }">
             <van-picker :columns="showHospColumns" @confirm="showHospOnConfirm" @cancel="showHospital = false" />
         </van-popup>
+
+        <!--就诊时间的弹窗选择-->
+        <van-cell-group class="cell">
+            <van-cell>
+                <template #title>就诊时间</template>
+                <template #default>
+                    <div @click="showStartTime = true">
+                        {{ currentDate || "请选择就诊时间" }}
+                        <van-icon name="arrow" />
+                    </div>
+                </template>
+            </van-cell>
+        </van-cell-group>
+        <van-popup v-model:show="showStartTime" round position="bottom" :style="{ height: '40%' }">
+            <van-date-picker title="选择日期" :min-date="minDate" @confirm="showTimeConfirm"
+                @cancel="showStartTime = false" />
+        </van-popup>
+
+
+
+
     </div>
 </template>
 
@@ -64,18 +89,32 @@ const showHospOnConfirm = (item) => {
     //关闭弹出层
     showHospital.value = false
 }
+//选择日期
+const showTimeConfirm = (item) => {
+    //拿到当前日期的对象并转换为字符串
+    const dataStr = item.selectedValues.join('-')
+    currentDate.value = dataStr
+    form.starttime = new Date(dataStr).getTime()
+    showStartTime.value = false
+}
 
 //获取当前vue实例
 const { proxy } = getCurrentInstance()
 onMounted(async () => {
     const { data } = await proxy.$api.h5Companion()
     Object.assign(createInfo, data.data)
-    console.log(createInfo);
 
 })
+
 const router = useRouter()
 //就诊医院的响应式变量
 const showHospital = ref(false)
+//就诊时间的响应式变量
+const showStartTime = ref(false)
+
+const currentDate = ref()
+//最小日期
+const minDate = ref(new Date())
 
 //点击返回上级页面
 const goBack = () => {
