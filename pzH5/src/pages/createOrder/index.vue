@@ -20,8 +20,9 @@
             </template>
         </van-cell>
 
-        <!--就诊医院的弹窗选择-->
         <van-cell-group class="cell">
+
+            <!--就诊医院-->
             <van-cell>
                 <template #title>就诊医院</template>
                 <template #default>
@@ -31,13 +32,8 @@
                     </div>
                 </template>
             </van-cell>
-        </van-cell-group>
-        <van-popup v-model:show="showHospital" round position="bottom" :style="{ height: '40%' }">
-            <van-picker :columns="showHospColumns" @confirm="showHospOnConfirm" @cancel="showHospital = false" />
-        </van-popup>
 
-        <!--就诊时间的弹窗选择-->
-        <van-cell-group class="cell">
+            <!--就诊时间-->
             <van-cell>
                 <template #title>就诊时间</template>
                 <template #default>
@@ -47,16 +43,59 @@
                     </div>
                 </template>
             </van-cell>
+
+            <!--陪诊师选择-->
+            <van-cell>
+                <template #title>陪诊师</template>
+                <template #default>
+                    <div @click="showCompanion = true">
+                        {{ companionName || "请选择陪诊师" }}
+                        <van-icon name="arrow" />
+                    </div>
+                </template>
+            </van-cell>
+
+            <!--接送地址选择-->
+            <van-cell>
+                <template #title>接送地址</template>
+                <template #default>
+                    <van-field class="text" input-align="right" v-model="form.receiveAddress" placeholder="请填写接送地址" />
+                </template>
+            </van-cell>
+
+            <!--联系电话-->
+            <van-cell>
+                <template #title>联系电话</template>
+                <template #default>
+                    <van-field class="text" input-align="right" v-model="form.tel" placeholder="请填写联系电话" />
+                </template>
+            </van-cell>
         </van-cell-group>
+
+        <van-cell-group title="服务需求" class="cell">
+            <van-field class="text" style="height: 100px;" v-model="form.demand" placeholder="请简要描述您要就诊的科室.." />
+        </van-cell-group>
+
+
+        <van-button @click="submit" type="primary" size="large" class="submit">提交订单</van-button>
+
+        <!--弹窗实现-->
+        <van-popup v-model:show="showHospital" round position="bottom" :style="{ height: '40%' }">
+            <van-picker title="选择医院" :columns="showHospColumns" @confirm="showHospOnConfirm"
+                @cancel="showHospital = false" />
+        </van-popup>
+
         <van-popup v-model:show="showStartTime" round position="bottom" :style="{ height: '40%' }">
             <van-date-picker title="选择日期" :min-date="minDate" @confirm="showTimeConfirm"
                 @cancel="showStartTime = false" />
         </van-popup>
 
-
-
-
+        <van-popup v-model:show="showCompanion" round position="bottom" :style="{ height: '40%' }">
+            <van-picker title="选择陪诊师" :columns="companionColumns" @confirm="showCompanionConfirm"
+                @cancel="showCompanion = false" />
+        </van-popup>
     </div>
+
 </template>
 
 <script setup>
@@ -77,6 +116,13 @@ const showHospColumns = computed(() => {
     })
 })
 
+const companionColumns = computed(() => {
+    return createInfo.companion.map(item => {
+        return { text: item.name, value: item.id }
+    })
+})
+
+
 //form数据
 const form = reactive({
 
@@ -84,7 +130,7 @@ const form = reactive({
 
 //选择医院
 const showHospOnConfirm = (item) => {
-    form.hospital_id = item.selectedValues[0].value
+    form.hospital_id = item.selectedOptions[0].value
     form.hospital_name = item.selectedOptions[0].text
     //关闭弹出层
     showHospital.value = false
@@ -97,6 +143,19 @@ const showTimeConfirm = (item) => {
     form.starttime = new Date(dataStr).getTime()
     showStartTime.value = false
 }
+//选择培护师
+const companionName = ref()
+const showCompanionConfirm = (item) => {
+    form.companion_id = item.selectedOptions[0].value
+    companionName.value = item.selectedOptions[0].text
+
+    showCompanion.value = false
+}
+
+//提交表单
+const submit = () => {
+
+}
 
 //获取当前vue实例
 const { proxy } = getCurrentInstance()
@@ -107,10 +166,13 @@ onMounted(async () => {
 })
 
 const router = useRouter()
+
 //就诊医院的响应式变量
 const showHospital = ref(false)
 //就诊时间的响应式变量
 const showStartTime = ref(false)
+//就诊师选择响应式变量
+const showCompanion = ref(false)
 
 const currentDate = ref()
 //最小日期
@@ -164,7 +226,7 @@ const goBack = () => {
     background-size: 20px;
 }
 
-.sumbit {
+.submit {
     position: absolute;
     bottom: 0;
 }
