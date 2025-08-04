@@ -94,6 +94,14 @@
             <van-picker title="选择陪诊师" :columns="companionColumns" @confirm="showCompanionConfirm"
                 @cancel="showCompanion = false" />
         </van-popup>
+        <!--支付二维码弹窗-->
+        <van-dialog :show-confirm-button="false" v-model:show="showCode">
+            <van-icon name="cross" class="close" @click="closeCode" />
+            <div>微信支付</div>
+            <van-image width="150px" height="150px" :src="codeImg" />
+            <div>请使用本人微信扫描二维码</div>
+        </van-dialog>
+
     </div>
 
 </template>
@@ -102,7 +110,8 @@
 import { useRouter } from "vue-router";
 import StatusBar from "../../components/statusBar.vue";
 import { onMounted, getCurrentInstance, reactive, ref, computed } from "vue";
-
+import { showNotify } from 'vant';
+import Qrcode from "qrcode";
 
 const createInfo = reactive({
     companion: [],
@@ -152,9 +161,40 @@ const showCompanionConfirm = (item) => {
     showCompanion.value = false
 }
 
+//支付弹窗
+const showCode = ref(false)
+//支付二维码
+const codeImg = ref('')
+//关闭弹窗
+const closeCode = () => {
+    showCode.value = false
+    router.push('/order')
+}
 //提交表单
-const submit = () => {
+const submit = async () => {
+    const params = [
+        'hospital_id',
+        'hospital_name',
+        'demand',
+        'companion_id',
+        'receiveAddress',
+        'tel',
+        'starttime'
+    ]
+    for (const i of params) {
+        if (!form[i]) {
+            // 危险通知
+            showNotify({ type: 'danger', message: '请填写每一项' });
+            return
+        }
+    }
+    const { data: orderRes } = await proxy.$api.createOrder(form)
+    console.log(orderRes);
+    Qrcode.toDataURL(orderRes.data.wx_code).then((url) => {
+        showCode.value = true
+        codeImg.value = url
 
+    })
 }
 
 //获取当前vue实例

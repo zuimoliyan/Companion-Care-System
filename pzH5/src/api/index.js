@@ -15,4 +15,8 @@ export default {
     h5Companion() {
         return request.get('h5/companion')
     },
+    //提交订单
+    createOrder(data) {
+        return request.post('/createOrder', data)
+    }
 }
