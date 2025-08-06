@@ -33,9 +33,14 @@
 <script setup>
 import { ref, getCurrentInstance, onMounted } from "vue";
 import counter from "../../components/counter.vue";
+import { useRouter } from "vue-router";
+
 
 //获取当前vue实例
 const { proxy } = getCurrentInstance()
+
+//创建router实例
+const router = useRouter()
 
 const order = ref([])
 
@@ -59,9 +64,10 @@ const getOrderList = async (state) => {
     order.value = data.data
 }
 //跳转详情
-const goDetail = () => {
-
+const goDetail = (item) => {
+    router.push(`/detail?oid=${item.out_trade_no}`)
 }
+
 const onClickTab = (item) => {
     getOrderList(item.name)
 }

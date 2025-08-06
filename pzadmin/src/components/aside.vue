@@ -7,8 +7,8 @@
          控制页面的展开和折叠，接收的是 navHeader.vue 中对于logo的 点击：@click="store.commit('collapseMenu')
   -->
   <el-menu :style="{ width: !isCollapse ? '230px' : '64px' }" active-text-color="#ffd04b" background-color="#545c64"
-    class="aside-container" text-color="#fff" @open="handleOpen" @close="handleClose"
-    :default-active="active" :collapse="isCollapse">
+    class="aside-container" text-color="#fff" @open="handleOpen" @close="handleClose" :default-active="active"
+    :collapse="isCollapse">
     <p class="logo" @click="goToRoot">{{ isCollapse ? 'DIDI' : 'DIDI陪诊' }}</p>
 
     <!-- 将具体的一级二级菜单挂载到主框架 -->
@@ -21,25 +21,29 @@
 <script setup>
 // 引入封装的菜单
 import treeMenu from "./treeMenu.vue";
-import { useRouter } from "vue-router";
-import { reactive, computed } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 
 
-const router = useRouter()
 
 const active = computed(() => store.state.menu.menuActive)
 
-//创建响应式的数据
-// const menuData = reactive(router.options.routes[0].children)
+//创建响应式的数据,获取左侧菜单树的列表项
 const menuData = computed(() => store.state.menu.routerList)
+console.log(menuData, "menuData");
+
+
 const store = useStore()
 //控制左侧菜单树面板展开与否
 // 调用menu.js中的代码，当调用这个 mutation 时，它会将 isCollapse 的值取反。
 const isCollapse = computed(() => store.state.menu.isCollapse)
 
-const handleOpen = () => { }
-const handleClose = () => { }
+const handleOpen = () => {
+  console.log("展开");
+}
+const handleClose = () => {
+  console.log("折叠");
+}
 
 // 这里用于实现点击logo跳转到根目录
 const goToRoot = () => {
