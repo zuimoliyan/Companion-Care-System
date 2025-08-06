@@ -16,7 +16,41 @@
                     <van-button type="success" size="large" @click="showCode = true">立即支付</van-button>
                 </div>
             </div>
+
+            <div class="dzf" v-if="detailData.trade_state === '待服务'">
+                <div class="text1">正在为您安排专员...</div>
+                <div class="text2">请保持手机通畅，稍后将会有专员与您联系</div>
+            </div>
+
+            <div class="dzf" v-if="detailData.trade_state === '已完成'">
+                <div class="text1">服务已完成</div>
+                <div class="text2">感谢您的使用，如有任何疑问请联系客服处理</div>
+            </div>
+
+            <div class="dzf" v-if="detailData.trade_state === '已取消'">
+                <div class="text1">订单已取消</div>
+                <div class="text2">期待下次为您服务，如有问题可咨询客服帮助</div>
+            </div>
         </div>
+
+        <van-cell-group class="card">
+            <div class="header-text">预约信息</div>
+            <van-cell v-for="(item,key) in makeInfo"
+            :key="key"
+            :title = "item"
+            :value="formatData(key)"
+            />
+        </van-cell-group>
+
+        <van-cell-group class="card">
+            <div class="header-text">订单信息</div>
+            <van-cell v-for="(item,key) in orderInfo"
+            :key="key"
+            :title = "item"
+            :value="formatData(key)"
+            />
+        </van-cell-group>
+
         <!--支付二维码弹窗-->
         <van-dialog :show-confirm-button="false" v-model:show="showCode">
             <van-icon name="cross" class="close" @click="closeCode" />
@@ -43,6 +77,15 @@ const { proxy } = getCurrentInstance()
 const detailData = reactive({
 
 })
+//支付弹窗
+const showCode = ref(false)
+//支付二维码
+const codeImg = ref('')
+//关闭弹窗
+const closeCode = () => {
+    showCode.value = false
+}
+
 
 //计算订单时间
 const second = computed(() => {
@@ -53,7 +96,6 @@ onMounted(async () => {
     const { data } = await proxy.$api.orderDetail({ oid: route.query.oid })
     Object.assign(detailData, data.data)
     Qrcode.toDataURL(data.data.code_url).then((url) => {
-        showCode.value = true
         codeImg.value = url
     })
 
@@ -61,20 +103,48 @@ onMounted(async () => {
 })
 
 
-
-
-//支付弹窗
-const showCode = ref(false)
-//支付二维码
-const codeImg = ref('')
-//关闭弹窗
-const closeCode = () => {
-    showCode.value = false
-    showToast({
-        message: '请尽快完成支付',
-        position: 'bottom',
-    });
+//订单详情
+const makeInfo = {
+    service_name: '预约服务',
+    hospital_name: '就诊医院',
+    starttime: '期望就诊时间',
+    'client.name': '就诊人',
+    'client.mobile': '就诊人电话',
+    receiveAddress: '接送地址',
+    demand: '其他需求'
 }
+
+//订单信息
+const orderInfo = {
+    tel: '就诊人电话',
+    order_start_time: '下单时间',
+    price: '应付金额',
+    out_trade_no: '订单编号'
+}
+
+//处理订单数据
+const formatData = (key) => {
+    if (key.indexOf(".") === -1) {
+        if (key === "order_start_time") {
+            return formatTimestamp(detailData[key]);
+        }
+        return detailData[key];
+    }
+    let arr = key.split(".").reduce((o, p) => {
+        return (o || {})[p];
+    }, detailData);
+    return arr;
+}
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // 月份是从0开始的，所以需要+1
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+
 
 
 //创建枚举
