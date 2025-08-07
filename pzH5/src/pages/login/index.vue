@@ -36,7 +36,7 @@ const onSubmit = async () => {
     if (data.code === 10000) {
 
         localStorage.setItem('h5_token', data.data.token)
-        localStorage.setItem('h5_userInfo', JSON.stringify(data.data.token))
+        localStorage.setItem('h5_userInfo', JSON.stringify(data.data))
         showNotify({ type: 'success', message: '登录成功' });
         setTimeout(() => {
             closeNotify();
