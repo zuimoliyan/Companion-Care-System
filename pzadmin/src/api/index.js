@@ -69,3 +69,9 @@ export const companionList = (params) => {
 export const deleteCompanion = (data) => {
     return request.post('/delete/companion', data)
 }
+
+//订单列表请求
+export const adminOrder = (params) => {
+    return request.get('/admin/order', { params })
+}
+
