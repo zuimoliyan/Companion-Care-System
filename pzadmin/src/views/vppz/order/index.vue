@@ -37,7 +37,7 @@
 
         <el-table-column label="订单状态">
             <template #default="scope">
-                <el-tag type="statusMap(scope.row.trade_state)">{{ statusMap(scope.row.trade_state) }}</el-tag>
+                <el-tag type="statusMap(scope.row.trade_state)">{{ scope.row.trade_state}}</el-tag>
             </template>
         </el-table-column>
 
