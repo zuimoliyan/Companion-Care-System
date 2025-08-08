@@ -6,7 +6,7 @@
                 <el-input v-model="searchForm.out_trade_no" placeholder="订单号" />
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @!click="onSubmit">查询</el-button>
+                <el-button type="primary" @click="onSubmit">查询</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -37,7 +37,7 @@
 
         <el-table-column label="订单状态">
             <template #default="scope">
-                <el-tag type="statusMap(scope.row.trade_state)">{{ scope.row.trade_state}}</el-tag>
+                <el-tag type="statusMap(scope.row.trade_state)">{{ scope.row.trade_state }}</el-tag>
             </template>
         </el-table-column>
 
@@ -47,7 +47,7 @@
         <el-table-column label="操作" width="100" fixed="right">
             <template #default="scope">
                 <el-popconfirm v-if="scope.row.trade_state === '待服务'" width="220" :icon="InfoFilled"
-                    icon-color="#626AEF" title="是否确认完成?" @cancel="confirmEvent">
+                    icon-color="#626AEF" title="是否确认完成?" @cancel="confirmEvent(scope.row.out_trade_no)">
 
                     <template #reference>
                         <el-button type="primary" link>服务完成</el-button>
@@ -67,7 +67,7 @@
 
 <script setup>
 import { onMounted, reactive } from "vue";
-import { adminOrder } from "../../../api";
+import { adminOrder, updateOrder } from "../../../api";
 import { useRoute } from "vue-router";
 import dayjs from "dayjs";
 
@@ -79,7 +79,7 @@ const searchForm = reactive({
 })
 
 const onSubmit = () => {
-
+    getListData(searchForm)
 }
 
 onMounted(() => {
@@ -98,8 +98,8 @@ const tableData = reactive({
     total: 0
 })
 
-const getListData = () => {
-    adminOrder(paginationData).then(({ data }) => {
+const getListData = (params = {}) => {
+    adminOrder({ ...paginationData, ...params }).then(({ data }) => {
         const { list, total } = data.data
         tableData.list = list
         tableData.total = total
@@ -117,8 +117,12 @@ const statusMap = (key) => {
 }
 
 //确认完成按钮
-const confirmEvent = () => {
-
+const confirmEvent = (id) => {
+    updateOrder({ id }).then(({ data }) => {
+        if (data.code === 10000) {
+            getListData()
+        }
+    })
 }
 
 </script>

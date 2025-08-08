@@ -75,3 +75,7 @@ export const adminOrder = (params) => {
     return request.get('/admin/order', { params })
 }
 
+//订单状态转变
+export const updateOrder = (data) => {
+    return request.post('/update/order', data)
+}

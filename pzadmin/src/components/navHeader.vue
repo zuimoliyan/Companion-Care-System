@@ -35,7 +35,7 @@
             <!-- 这里套用element-plus的模版 -->
             <el-dropdown @command="handleClick">
                 <div class="el-dropdown-link flex-box">
-                    <el-avatar :src="userInfo.avatar" />
+                    <el-avatar src="../../public/代替头像.jpg" />
                     <p class="user-name">{{ userInfo.name }}</p>
                 </div>
                 <template #dropdown>

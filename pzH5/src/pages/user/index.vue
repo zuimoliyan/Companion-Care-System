@@ -1,7 +1,8 @@
 <template>
     <div class="container">
         <div class="user">
-            <van-image class="img" :src="data.userInfo.avatar" width="100px" height="100" />
+            <!-- <van-image class="img" :src="data.userInfo.avatar" width="100px" height="100" /> -->
+             <van-image class="img" src="../../../public/代替头像.jpg" width="100px" height="100" />
             <div class="text">{{ data.userInfo.name }}</div>
         </div>
 
